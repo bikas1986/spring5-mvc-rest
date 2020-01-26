@@ -6,8 +6,9 @@ import org.springframework.context.event.ContextRefreshedEvent;
 
 import com.bikas.domain.Category;
 import com.bikas.repositories.CategoryRepository;
+import org.springframework.stereotype.Component;
 
-
+@Component
 public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 	private CategoryRepository categoryRepository;
 	
