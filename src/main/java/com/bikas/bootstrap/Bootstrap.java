@@ -3,11 +3,12 @@ package com.bikas.bootstrap;
 
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
+import org.springframework.stereotype.Component;
 
 import com.bikas.domain.Category;
 import com.bikas.repositories.CategoryRepository;
 
-
+@Component
 public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 	private CategoryRepository categoryRepository;
 	
