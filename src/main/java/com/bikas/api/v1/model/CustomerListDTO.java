@@ -10,5 +10,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CustomerListDTO {
-	List<CustomerDTO> customer;
+	List<CustomerDTO> customers;
 }
