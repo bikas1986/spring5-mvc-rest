@@ -1,6 +1,8 @@
 package com.bikas.services;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -11,13 +13,13 @@ import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import com.bikas.api.v1.mapper.CustomerMapper;
 import com.bikas.api.v1.model.CustomerDTO;
+import com.bikas.controllers.v1.CustomerController;
 import com.bikas.domain.Customer;
 import com.bikas.repositories.CustomerRepository;
 
@@ -97,7 +99,7 @@ class CustomerServiceTest {
 		
 		//then
 		assertEquals(customerDTO.getFirstName(), savedDTO.getFirstName());
-		assertEquals("/api/v1/customers/1", savedDTO.getCustomerUrl());
+		assertEquals(CustomerController.BASE_URL+"/1", savedDTO.getCustomerUrl());
 	}
 	
 	@Test
@@ -119,7 +121,17 @@ class CustomerServiceTest {
 		
 		//then
 		assertEquals(customerDTO.getFirstName(), savedDTO.getFirstName());
-		assertEquals("/api/v1/customers/1", savedDTO.getCustomerUrl());
+		assertEquals(CustomerController.BASE_URL+"/1", savedDTO.getCustomerUrl());
 	}
+	
+	@Test
+    public void deleteCustomerById() throws Exception {
+
+        Long id = 1L;
+
+        customerService.deleteCustomerById(id);
+
+        verify(customerRepository, times(1)).deleteById(anyLong());
+    }
 
 }

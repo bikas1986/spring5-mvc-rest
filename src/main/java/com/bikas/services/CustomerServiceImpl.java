@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.bikas.api.v1.mapper.CustomerMapper;
 import com.bikas.api.v1.model.CustomerDTO;
+import com.bikas.controllers.v1.CustomerController;
 import com.bikas.domain.Customer;
 import com.bikas.repositories.CustomerRepository;
 
@@ -28,7 +29,7 @@ public class CustomerServiceImpl implements CustomerService {
 					.stream()
 					.map(customer -> {
 						CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
-						customerDTO.setCustomerUrl("/api/v1/customers/"+customer.getId());
+						customerDTO.setCustomerUrl(getCustomerUrl(customer.getId()));
 						return customerDTO;
 					})
 					.collect(Collectors.toList());
@@ -41,7 +42,7 @@ public class CustomerServiceImpl implements CustomerService {
 		return customerRepository.findById(id)
 					.map(customer -> {
 						CustomerDTO customerDTO = customerMapper.customerToCustomerDTO(customer);
-						customerDTO.setCustomerUrl("/api/v1/customers/"+customer.getId());
+						customerDTO.setCustomerUrl(getCustomerUrl(customer.getId()));
 						return customerDTO;
 					})
 					.orElseThrow(RuntimeException::new);  //todo implement better exception handling
@@ -58,7 +59,7 @@ public class CustomerServiceImpl implements CustomerService {
 		
 		CustomerDTO returnDTO = customerMapper.customerToCustomerDTO(savedCustomer);
 		
-		returnDTO.setCustomerUrl("/api/v1/customers/"+savedCustomer.getId());
+		returnDTO.setCustomerUrl(getCustomerUrl(savedCustomer.getId()));
 		
 		return returnDTO;
 	}
@@ -85,12 +86,21 @@ public class CustomerServiceImpl implements CustomerService {
 			
 			CustomerDTO returnDto = customerMapper.customerToCustomerDTO(customerRepository.save(customer));
 
-            returnDto.setCustomerUrl("/api/v1/customer/" + id);
+            returnDto.setCustomerUrl(getCustomerUrl(id));
 
             return returnDto;
 		}).orElseThrow(RuntimeException::new); //todo implement better exception handling
 	}
+
+	@Override
+	public void deleteCustomerById(Long id) {
+		customerRepository.deleteById(id);
+	}
 	
+	
+	 private String getCustomerUrl(Long id) {
+	        return CustomerController.BASE_URL + "/" + id;
+	    }
 	
 
 }

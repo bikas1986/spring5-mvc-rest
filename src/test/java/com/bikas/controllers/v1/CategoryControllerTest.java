@@ -1,6 +1,5 @@
 package com.bikas.controllers.v1;
 
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -49,7 +48,7 @@ class CategoryControllerTest {
         
         when(categoryService.getCategoryByName(NAME)).thenReturn(category1);
         
-        mockMvc.perform(get("/api/v1/categories/Jim").accept(MediaType.APPLICATION_JSON))
+        mockMvc.perform(get(CategoryController.BASE_URL+"/Jim").accept(MediaType.APPLICATION_JSON))
         	.andExpect(status().isOk())
         	.andExpect(jsonPath("$.name", equalTo(NAME)));
 	}
@@ -68,7 +67,7 @@ class CategoryControllerTest {
         
         when(categoryService.getAllCategories()).thenReturn(categoryList);
         
-        mockMvc.perform(get("/api/v1/categories/")
+        mockMvc.perform(get(CategoryController.BASE_URL)
         		.contentType(MediaType.APPLICATION_JSON))
         		.andExpect(status().isOk())
         		.andExpect(jsonPath("$.categories", hasSize(2)));
