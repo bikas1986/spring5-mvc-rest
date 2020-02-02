@@ -32,7 +32,7 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
 	}
 
 
-	private void loadCategory() {
+	public void loadCategory() {
 		Category fruits = new Category();
         fruits.setName("Fruits");
 
@@ -58,7 +58,7 @@ public class Bootstrap implements ApplicationListener<ContextRefreshedEvent> {
         System.out.println("Data Loaded = " + categoryRepository.count() );
 	}
 	
-	private void loadCustomerData() {
+	public void loadCustomerData() {
 		Customer customer1 = new Customer();
 		customer1.setFirstName("Bikas");
 		customer1.setLastName("Patro");
