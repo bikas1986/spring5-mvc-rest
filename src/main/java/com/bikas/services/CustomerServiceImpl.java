@@ -47,4 +47,19 @@ public class CustomerServiceImpl implements CustomerService {
 					.orElseThrow(RuntimeException::new);  //todo implement better exception handling
 	}
 
+	@Override
+	public CustomerDTO createNewCustomer(CustomerDTO customerDTO) {
+		Customer customer = customerMapper.customerDtoToCustomer(customerDTO);
+		
+		Customer savedCustomer = customerRepository.save(customer);
+		
+		CustomerDTO returnDTO = customerMapper.customerToCustomerDTO(savedCustomer);
+		
+		returnDTO.setCustomerUrl("/api/v1/customers/"+savedCustomer.getId());
+		
+		return returnDTO;
+	}
+	
+	
+
 }
