@@ -1,5 +1,6 @@
 package com.bikas.controllers.v1;
 
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -21,7 +22,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.bikas.api.v1.model.CategoryDTO;
+import com.bikas.controllers.RestResponseEntityExceptionHandler;
 import com.bikas.services.CategoryService;
+import com.bikas.services.ResourceNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 class CategoryControllerTest {
@@ -37,7 +40,9 @@ class CategoryControllerTest {
 	
 	@BeforeEach
 	public void setup() throws Exception{
-		mockMvc = MockMvcBuilders.standaloneSetup(categoryController).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(categoryController)
+				.setControllerAdvice(new RestResponseEntityExceptionHandler())
+				.build();
 	}
 	
 	@Test
@@ -73,4 +78,14 @@ class CategoryControllerTest {
         		.andExpect(jsonPath("$.categories", hasSize(2)));
 	}
 
+	
+	@Test
+    public void testGetByNameNotFound() throws Exception {
+
+        when(categoryService.getCategoryByName(anyString())).thenThrow(ResourceNotFoundException.class);
+
+        mockMvc.perform(get(CategoryController.BASE_URL + "/Foo")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 }

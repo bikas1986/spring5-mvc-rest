@@ -27,7 +27,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.bikas.api.v1.model.CustomerDTO;
+import com.bikas.controllers.RestResponseEntityExceptionHandler;
 import com.bikas.services.CustomerService;
+import com.bikas.services.ResourceNotFoundException;
 
 @ExtendWith(MockitoExtension.class)
 class CustomerControllerTest extends AbstractRestControllerTest{
@@ -41,7 +43,9 @@ class CustomerControllerTest extends AbstractRestControllerTest{
 	
 	@BeforeEach
 	void setUp() throws Exception {
-		mockMvc = MockMvcBuilders.standaloneSetup(customerController).build();
+		mockMvc = MockMvcBuilders.standaloneSetup(customerController)
+				.setControllerAdvice(new RestResponseEntityExceptionHandler())
+				.build();
 	}
 
 	@Test
@@ -170,5 +174,15 @@ class CustomerControllerTest extends AbstractRestControllerTest{
                 .andExpect(status().isOk());
 
         verify(customerService).deleteCustomerById(anyLong());
+    }
+	
+	@Test
+    public void testNotFoundException() throws Exception {
+
+        when(customerService.getCustomerById(anyLong())).thenThrow(ResourceNotFoundException.class);
+
+        mockMvc.perform(get(CustomerController.BASE_URL + "/222")
+                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
     }
 }
