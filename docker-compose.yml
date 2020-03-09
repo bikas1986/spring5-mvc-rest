@@ -1,0 +1,36 @@
+version: '3.7'
+services:
+  spring5-mvc-rest:
+    image: bikas1986/spring5-mvc-rest:dockerCompose1
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    restart: always
+    depends_on:
+      - mysql
+    environment:
+      RDS_HOSTNAME: mysql
+      RDS_PORT: 3306
+      RDS_DB_NAME: spring5mvcrest
+      RDS_USERNAME: rest-user
+      RDS_PASSWORD: password
+    networks:
+      - spring5-mvc-rest-network
+  
+  mysql:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: rest-user
+      MYSQL_PASSWORD: password
+      MYSQL_DATABASE: spring5mvcrest
+    networks:
+      - spring5-mvc-rest-network
+      
+networks:
+  spring5-mvc-rest-network:
